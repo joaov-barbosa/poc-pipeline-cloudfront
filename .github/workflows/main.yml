@@ -3,9 +3,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-cloudfront:
+  environment:
     runs-on: ubuntu-latest
-    environment: prd
+    outputs:
+      environment: ${{ env.environment }}
     steps:
       - name: Check branch and set environment
         run: |
@@ -15,6 +16,12 @@ jobs:
            echo "environment=dev" >> $GITHUB_ENV
            fi
            echo "${environment}"
+      
+  deploy-cloudfront:
+    runs-on: ubuntu-latest
+    environment: ${{ needs.environment.outputs.environment }}
+    steps:
+
       
       - name: Checkout
         uses: actions/checkout@v3
