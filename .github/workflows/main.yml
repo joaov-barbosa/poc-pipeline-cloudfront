@@ -9,11 +9,15 @@ jobs:
       environment: ${{ env.environment }}
     steps:
       - name: Check branch and set environment
+        id: set-environment
         run: |
            echo "BRANCH RECEBIDA: $GITHUB_REF_NAME"
            if [ "$GITHUB_REF_NAME" == "master" ]; then
-           echo "environment=prd" >> $GITHUB_ENV
+           echo "environment=prd" >> $GITHUB_OUTPUT
            else
-           echo "environment=dev" >> $GITHUB_ENV
+           echo "environment=dev" >> $GITHUB_OUTPUT
            fi
            echo "Environment is set to: ${{ env.environment}}"
+      - name: Use the output value
+        run: |
+         echo "The greeting is: ${{ steps.set-environment.outputs.environment }}"
