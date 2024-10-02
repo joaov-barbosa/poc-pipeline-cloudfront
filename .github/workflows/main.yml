@@ -5,7 +5,7 @@ on:
 jobs:
   deploy-cloudfront:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.ENV }}
+    environment: ${{ env.environment }}
     steps:
       - name: Check branch and set environment
         run: |
@@ -14,7 +14,8 @@ jobs:
            else
            echo "environment=dev" >> $GITHUB_ENV
            fi
-
+           echo "${env.environment}"
+      
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -24,6 +25,9 @@ jobs:
           aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, env.environment)] }}
           aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, env.environment)] }}
           aws-region: ${{ vars.REGION }}
+      
+      - name: Upload App in S3 Bucket
+        run: aws s3 ls
 
       - name: Upload App in S3 Bucket
         run: |
