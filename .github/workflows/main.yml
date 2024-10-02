@@ -5,7 +5,7 @@ on:
 jobs:
   deploy-cloudfront:
     runs-on: ubuntu-latest
-    environment: ${{ env.environment }}
+    environment: prd
     steps:
       - name: Check branch and set environment
         run: |
