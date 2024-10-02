@@ -1,4 +1,4 @@
-name: Pipeline Innovation DevOps
+name: DevOps
 on:
   workflow_dispatch:
 
