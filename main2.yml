@@ -3,23 +3,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  environment:
+  set-environment:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ env.environment }}
+      environment: prd #${{ steps.set-environment.outputs.environment }}
     steps:
       - name: Check branch and set environment
+        id: set-environment
         run: |
            if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
-           echo "environment=prd" >> $GITHUB_ENV
+             echo "environment=prd" >> $GITHUB_ENV
+             echo "::set-output name=environment::prd"
            else
-           echo "environment=dev" >> $GITHUB_ENV
-           fi
-           echo "${environment}"
-      
+             echo "environment=dev" >> $GITHUB_ENV
+             echo "::set-output name=environment::dev"
+           fi   
   deploy-cloudfront:
     runs-on: ubuntu-latest
-    environment: ${{ needs.environment.outputs.environment }}
+    environment: prd #${{ needs.set-environment.outputs.environment }}
     steps:
 
       
@@ -29,8 +30,8 @@ jobs:
       - name: Authentication AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
-          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, 'prd')] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, 'prd')] }}
           aws-region: ${{ vars.REGION }}
       
       - name: Upload App in S3 Bucket
