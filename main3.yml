@@ -1,0 +1,28 @@
+  deploy-cloudfront:
+    runs-on: ubuntu-latest
+    environment: ${{ needs.environment.outputs.environment }}
+    steps:
+
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authentication AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
+          aws-region: ${{ vars.REGION }}
+      
+      - name: Upload App in S3 Bucket
+        run: aws s3 ls
+
+      - name: Upload App in S3 Bucket
+        run: |
+          aws s3 sync --no-follow-symlinks . s3://${{ vars.BUCKET_NAME }}/
+
+      - name: Invalidate App Cache
+        run: |
+          # Invalidate App Cache
+          echo "Iniciando limpeza de cache no cloudfront: ${{ vars.DISTRIBUTION_ID }}"
+          aws cloudfront create-invalidation --distribution-id ${{ vars.DISTRIBUTION_ID }} --paths "/*"
