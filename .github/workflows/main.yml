@@ -29,8 +29,8 @@ jobs:
       - name: Authentication AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, env.environment)] }}
-          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, env.environment)] }}
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
           aws-region: ${{ vars.REGION }}
       
       - name: Upload App in S3 Bucket
