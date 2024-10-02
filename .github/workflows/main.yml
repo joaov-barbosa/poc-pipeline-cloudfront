@@ -11,7 +11,7 @@ jobs:
       - name: Check branch and set environment
         run: |
            echo "BRANCH RECEBIDA: $GITHUB_REF_NAME"
-           if [["$GITHUB_REF_NAME" == "master" ]]; then
+           if [ "$GITHUB_REF_NAME" == "master" ]; then
            echo "environment=prd" >> $GITHUB_ENV
            else
            echo "environment=dev" >> $GITHUB_ENV
