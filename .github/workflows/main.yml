@@ -16,4 +16,4 @@ jobs:
            else
            echo "environment=dev" >> $GITHUB_ENV
            fi
-           echo "Environment is set to: $environment"
+           echo "Environment is set to: ${{ env.environment}}"
