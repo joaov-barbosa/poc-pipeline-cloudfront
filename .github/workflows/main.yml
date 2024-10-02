@@ -14,7 +14,7 @@ jobs:
            else
            echo "environment=dev" >> $GITHUB_ENV
            fi
-           echo "${env.environment}"
+           echo "${environment}"
       
       - name: Checkout
         uses: actions/checkout@v3
