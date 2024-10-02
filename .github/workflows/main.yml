@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  environment:
+  set-environment:
     runs-on: ubuntu-latest
     outputs:
       environment: prd #${{ steps.set-environment.outputs.environment }}
@@ -20,7 +20,7 @@ jobs:
            fi   
   deploy-cloudfront:
     runs-on: ubuntu-latest
-    environment: ${{ needs.environment.outputs.environment }}
+    environment: ${{ needs.set-environment.outputs.environment }}
     steps:
 
       
@@ -30,8 +30,8 @@ jobs:
       - name: Authentication AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
-          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, needs.environment.outputs.environment)] }}
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}_{1}', vars.AWS_ACCOUNT, needs.set-environment.outputs.environment)] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}_{1}', vars.AWS_ACCOUNT, needs.set-environment.outputs.environment)] }}
           aws-region: ${{ vars.REGION }}
       
       - name: Upload App in S3 Bucket
