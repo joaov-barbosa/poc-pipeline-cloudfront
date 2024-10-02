@@ -6,7 +6,7 @@ jobs:
   environment:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ steps.set-environment.outputs.environment }}
+      environment: prd #${{ steps.set-environment.outputs.environment }}
     steps:
       - name: Check branch and set environment
         id: set-environment
