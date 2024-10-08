@@ -1,4 +1,4 @@
-name: Decryot
+name: Decrypt
 on:
   workflow_dispatch:
 jobs:
